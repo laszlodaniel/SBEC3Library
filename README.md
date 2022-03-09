@@ -11,3 +11,7 @@ HTML preview of the disassembled and partially reverse engineered [SBEC3_1995_Bo
 HTML preview of the disassembled and partially reverse engineered [SBEC3_Bootstrap.bin](https://htmlpreview.github.io/?https://github.com/laszlodaniel/SBEC3Library/blob/main/Bootstrap/SBEC3_Bootstrap.html) code.
 
 These two are quite similar, except in the year 1995 no security measures were implemented to prevent easy access.
+
+## Bootloader codes
+
+The bootloader code acts as a host, configures the MCU and makes it possible to upload worker functions performing different tasks.
