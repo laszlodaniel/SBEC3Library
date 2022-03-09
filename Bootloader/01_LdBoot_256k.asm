@@ -145,27 +145,27 @@ Reset:
 	std	SIMCR, Z		; save D to Module Configuration Register
 	bclr	SYPCR, Z, #$80		; clear SWE flag (software watchdog disabled) in System Protection Control Register
 	ldd	#$CF
-	std	CSPAR0, Z		; configure CSPAR0
-					; CSBTPA = 11
-					; CS0PA  = 11 (16-bit port)
-					; CS1PA  = 00 (output)
+	std	CSPAR0, Z		; configure CSPAR0
+					; CSBTPA = 11
+					; CS0PA  = 11 (16-bit port)
+					; CS1PA  = 00 (output)
 					; CS2PA  = 11 (16-bit port)
 	ldd	#$405
-	std	CSBARBT, Z		; configure CSBARBT
-					; BLKSZ = 101 = 256 kB
+	std	CSBARBT, Z		; configure CSBARBT
+					; BLKSZ = 101 = 256 kB
 					; ADDR  = 0x40000
-	std	CSBAR0, Z		; configure CSBAR0
-					; BLKSZ = 101 = 256 kB
+	std	CSBAR0, Z		; configure CSBAR0
+					; BLKSZ = 101 = 256 kB
 					; ADDR  = 0x40000
 	ldd	#$68F0
-	std	CSORBT, Z		; configure CSORBT
-					; MODE  = 0b: asynchronous mode selected
-					; BYTE  = 11b: both bytes are selected in the pin assignment register
-					; RW    = 01b: chip select to be asserted only for read
-					; STRB  = 0b: chip select to be asserted synchronized with address strobe
-					; DSACK = 0011b: 3 wait states are inserted to op-timize bus speed
-					; SPACE = 11b: select supervisor/user space field for chip select logic
-					; IPL   = 000b: any level for interrupt priority level
+	std	CSORBT, Z		; configure CSORBT
+					; MODE  = 0b: asynchronous mode selected
+					; BYTE  = 11b: both bytes are selected in the pin assignment register
+					; RW    = 01b: chip select to be asserted only for read
+					; STRB  = 0b: chip select to be asserted synchronized with address strobe
+					; DSACK = 0011b: 3 wait states are inserted to op-timize bus speed
+					; SPACE = 11b: select supervisor/user space field for chip select logic
+					; IPL   = 000b: any level for interrupt priority level
 					; AVEC  = 0b: external interrupt vector enabled
 	ldd	#$70F0
 
