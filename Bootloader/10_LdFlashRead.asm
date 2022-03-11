@@ -2,7 +2,7 @@
 ; 
 ; MCU: 68HC16
 ; 
-; Worker function to read SBEC3 PCM flash memory.
+; Worker function to read SBEC3 PCM's flash memory.
 ; 
 ; Commands:
 ; 
@@ -17,12 +17,12 @@
 ; XX YY ZZ: flash memory values
 ; 
 ; Exit worker function:
-; TX: 55
-; RX: 56 22
+; TX: E0
+; RX: E1 22
 ; 
-; 55: request exit
-; 56: request accepted
-; 22: function finished running
+; E0: request exit
+; E1: request accepted
+; 22: function finished
 ; 
 ; Notes:
 ; Wait for echo before transmitting the next byte.
@@ -36,7 +36,7 @@ LdFlashRead:
 	jsr	SCI_RX			; read SCI-byte to B
 	cmpb	#$45			; $45 = read flash memory command
 	beq	GetParameters		; branch to get read parameters
-	cmpb	#$55			; $55 = exit worker function command
+	cmpb	#$E0			; $E0 = exit worker function command
 	beq	Break			; branch to exit
 	bne	LdFlashRead		; try again with another command byte
 
@@ -79,9 +79,9 @@ ReadNextByte:
 
 Break:
 
-	ldab	#$56			; $56 = exit request accepted
+	ldab	#$E1			; $E1 = exit request accepted
 	jsr	SCI_TX			; echo
-	ldab	#$22			; $22 = function finished running
+	ldab	#$22			; $22 = function finished
 	jsr	SCI_TX			; echo
 	rts				; return from subroutine
 
