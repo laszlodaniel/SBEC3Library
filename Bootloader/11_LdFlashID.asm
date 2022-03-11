@@ -27,7 +27,7 @@
 ; Known manufacturer and chip IDs:
 ; 
 ; Manufacturer:
-; $20: ST Microelectronics
+; $20: STMicroelectronics
 ; 
 ; Chip ID:
 ; $50: M28F102 (128k)
