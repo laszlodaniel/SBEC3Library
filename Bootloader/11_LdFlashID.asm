@@ -53,7 +53,7 @@ LdFlashID:
 
 GetParameters:
 
-	ldab	#$56			; $55 = read flash manufacturer and chip ID request accepted
+	ldab	#$56			; $56 = read flash manufacturer and chip ID request accepted
 	jsr	SCI_TX			; echo
 	ldab	#4			; B = 4
 	tbxk				; XK = B = 4
