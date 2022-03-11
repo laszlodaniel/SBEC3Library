@@ -9,13 +9,12 @@
 ; 
 ; Read flash memory manufacturer and chip ID:
 ; TX: 55
-; RX: 56 XX YY 22
+; RX: 56 XX YY
 ; 
 ; 55: read flash memory manufacturer and chip ID
 ; 56: request accepted
 ; XX: manufacturer ID
 ; YY: chip ID
-; 22: function finished
 ; 
 ; Exit worker function:
 ; TX: E0
