@@ -65,7 +65,7 @@ UploadFunction:
 	jsr	SCI_TX			; write SCI-bus byte from B (echo)
 	ldab	#0			; B = 0
 	tbxk				; XK = B = 0
-	ldx	#$200			; IX = $200, start offset of the uploaded worker function
+	ldx	#WorkerFunctionStart	; IX = start offset of the uploaded worker function
 
 ReadNextByte:
 
