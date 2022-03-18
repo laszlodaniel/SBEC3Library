@@ -76,7 +76,7 @@ ReadNextByte:
 	aix	#1			; increment IX value
 	decw	FncLenHB		; decrement function length
 	bne	ReadNextByte		; branch if length is not zero
-	ldd	#$FA0			; D = delay value
+	ldd	#$FA0			; set 2.5 ms delay
 	jsr	Delay			; wait here for a while
 	ldab	#4			; B = 4
 	tbxk				; XK = B = 4
@@ -104,7 +104,7 @@ SCI_TX:
 	anda	#1			; check TDRE flag
 	beq	SCI_TX			; branch/loop until TDRE is cleared
 	stab	SCDR_LB, Z		; save B to SCI Data Register LB
-	ldd	#$190			; D = delay value
+	ldd	#$190			; set 0.25 ms delay
 	jsr	Delay			; wait here for a while
 	rts				; return from subroutine
 
@@ -120,7 +120,7 @@ SCI_RX:
 Delay:
 
 	subd	#1			; decrement D
-	bne	Delay			; branch/loop until D equals zero
+	bne	Delay			; branch/loop until D equals zero, 1 loop takes 0.000625 ms to complete
 	rts				; return from subroutine
 
 FncLenHB: fcb $27			; Worker function length HB
