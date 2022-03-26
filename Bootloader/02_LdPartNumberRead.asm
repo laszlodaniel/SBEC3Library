@@ -185,7 +185,8 @@ ReadBlock:
 	bne	ReadBlock		; repeat until E = 0
 	rts				; return from subroutine
 
-Delay:
+Delay:
+
 	subd	#1			; decrement D
 	bne	Delay			; branch/loop until D equals zero, 1 loop takes 0.000625 ms to complete
 	rts				; return from subroutine
