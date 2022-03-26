@@ -24,17 +24,19 @@
 ; 
 ; Execute worker function:
 ; TX: 20
-; RX: 21 XX YY ZZ
+; RX: 21 XX YY ZZ 22
 ; 
 ; 20:       execute worker function request
 ; 21:       request accepted
 ; XX YY ZZ: returned values by the function (if any)
+; 22:       function finished
 ; 
 ; Notes:
 ; Wait for echo before transmitting the next byte.
 ; To save RAM space the worker function overwrites 
 ; parts of the bootloader code which are unused 
 ; anyways.
+; Worker functions not always terminate with 22.
 
 .include "68hc16def.inc"
 
