@@ -20,7 +20,7 @@
 ; 21 | 56 04 15 39 41 45 00 56 04 15 39 41 45 00 5A 42 5A 41 42 00 | 56 04 15 39 41 45 FF FF FF
 ;    | FLASH (20 bytes)                                            | EEPROM (9 bytes)
 ; 
-; Part number: 56041540AE
+; Part number: 56041539AE
 
 .include "68hc16def.inc"
 
@@ -56,7 +56,7 @@ FlashRead:
 	pshm	D, X			; push multiple registers onto stack (save value)
 	ldab	#4			; B = 4
 	tbyk				; YK = B = 4
-	ldy	#$200			; IY = $200 (YK:IY = $40200, pointer offsets in flash memory)
+	ldy	#$200			; IY = $200 (YK:IY = $40200, offset pointer in flash memory)
 	ldaa	1, Y			; IY = page address offset
 	cmpa	#4			; check page
 	bhi	Error			; error if page number greater than 4
