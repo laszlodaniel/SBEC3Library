@@ -3,6 +3,24 @@
 ; MCU: 68HC16
 ; 
 ; Worker function to read SBEC3 PCM part number.
+; Same principle works for reading TCM part number.
+; 
+; Example results:
+; 
+; 21 | 04 60 61 13 0A 04 60 61 13 0A C4 FF FF FF FF FF FF FF FF FF | FF FF FF FF FF FF FF FF AA
+;    | FLASH (20 bytes)                                            | EEPROM (9 bytes)
+; 
+; Part number: 04606113
+; 
+; 21 | 04 60 68 40 41 52 A0 20 20 20 20 20 20 21 05 04 00 00 00 08 | FF FF FF FF FF FF 01 FE AA
+;    | FLASH (20 bytes)                                            | EEPROM (9 bytes)
+; 
+; Part number: 04606840AR
+; 
+; 21 | 56 04 15 39 41 45 00 56 04 15 39 41 45 00 5A 42 5A 41 42 00 | 56 04 15 39 41 45 FF FF FF
+;    | FLASH (20 bytes)                                            | EEPROM (9 bytes)
+; 
+; Part number: 56041540AE
 
 .include "68hc16def.inc"
 
@@ -14,9 +32,9 @@ LdPartNumberRead:
 	jsr	GetEEPROMWord		; read EEPROM value at E to D
 	bcs	Break			; error if carry set
 	anda	#8			; check highest bit in A
-	bne	FromFlash		; read part number from flash memory if bit not set
+	bne	FromFlash		; read part number from flash memory if bit is set
 	jsr	Out20FF			; out 20x FF value to SCI
-	bra	FromEEPROM		; read part number from EEPROM if bit is set
+	bra	FromEEPROM		; read part number from EEPROM if bit is not set
 
 FromFlash:
 
@@ -38,10 +56,10 @@ FlashRead:
 	pshm	D, X			; push multiple registers onto stack (save value)
 	ldab	#4			; B = 4
 	tbyk				; YK = B = 4
-	ldy	#$200			; IY = $200 (YK:IY = $40200, part number start offset in flash memory)
+	ldy	#$200			; IY = $200 (YK:IY = $40200, pointer offsets in flash memory)
 	ldaa	1, Y			; IY = page address offset
 	cmpa	#4			; check page
-	bhi	Error			; error if page number greater or equal to 4
+	bhi	Error			; error if page number greater than 4
 	aba				; A = A + B
 	tab				; B = A
 	tbxk				; XK = B
