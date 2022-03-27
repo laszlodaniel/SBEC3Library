@@ -152,7 +152,7 @@ GetEEPROMWord:
 	asla				; arithmetic shift left A
 	asla				; arithmetic shift left A
 	asla				; arithmetic shift left A
-	oraa	#3			; A = A OR value
+	oraa	#3			; add read command
 	std	TR+$10, Z		; store D to a Transmit RAM register
 	ldd	#$908			; load D with value
 	std	SPCR2, Z		; store D to SPI register
