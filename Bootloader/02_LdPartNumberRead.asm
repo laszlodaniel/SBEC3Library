@@ -34,7 +34,7 @@ LdPartNumberRead:
 	anda	#8			; check highest bit in A
 	bne	FromFlash		; read part number from flash memory if bit is set
 	jsr	Out20FF			; out 20x FF value to SCI
-	bra	FromEEPROM		; read part number from EEPROM if bit is not set
+	bra	FromEEPROM		; always read part number from EEPROM
 
 FromFlash:
 
