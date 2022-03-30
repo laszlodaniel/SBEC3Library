@@ -47,7 +47,7 @@ LdFlashRead:
 	ldd	DataHB			; load D with byte count
 	cpd	#0			; compare D to zero
 	lbeq	LdFlashRead		; can't read zero bytes, try again
-	clrd
+	clrd				; clear D
 
 ReadNextByte:
 
