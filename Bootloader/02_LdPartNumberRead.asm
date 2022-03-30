@@ -5,6 +5,15 @@
 ; Worker function to read SBEC3 PCM part number.
 ; Same principle works for reading TCM part number.
 ; 
+; Command:
+; 
+; TX: 20
+; RX: 21 XX YY ZZ...
+; 
+; 20:       start worker function request
+; 21:       request accepted
+; XX YY ZZ: part number blocks from flash and EEPROM
+; 
 ; Example results:
 ; 
 ; 21 | 04 60 61 13 0A 04 60 61 13 0A C4 FF FF FF FF FF FF FF FF FF | FF FF FF FF FF FF FF FF AA
