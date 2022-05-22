@@ -28,8 +28,7 @@
 ; $E6: M28F220 (256k)
 ; 
 ; Notes:
-; M28F102 needs bootstrap voltage to output these information.
-; To be tested.
+; M28F102 needs programming voltage to output these information.
 
 .include "68hc16def.inc"
 
