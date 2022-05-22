@@ -41,14 +41,18 @@ LdFlashID:
 	tbxk				; XK = B = 4
 	ldx	#0			; XK:IX = $40000
 	ldd	#$3E80			; set 10 ms delay
-	jsr	Delay			; wait here for bootstrap voltage
+	jsr	Delay			; wait here for programming voltage
 	ldd	#$90			; $90 = read electronic signature command
 	std	0, X			; set command
 	ldab	1, X			; read manufacturer ID
 	jsr	SCI_TX			; echo
 	ldab	3, X			; read chip ID
 	jsr	SCI_TX			; echo
-	ldd	#$FF			; $FF = switch to read mode command for M28F210/M28F220, reset command for M28F102
+	ldd	#$FFFF			; $xxFF = switch to read mode command for M28F210/M28F220, $FFFF = reset command for M28F102
+	std	0, X			; set command
+	ldd	#$FFFF			; reset command confirmation for M28F102
+	std	0, X			; set command
+	ldd	#0			; $00 = mandatory switch to read mode command for M28F102, invalid for M28F210/M28F220
 	std	0, X			; set command
 	rts				; return from subroutine
 
