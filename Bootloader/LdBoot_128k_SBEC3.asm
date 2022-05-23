@@ -1,4 +1,4 @@
-; 01_LdBoot_128k.asm
+; LdBoot_128k_SBEC3.asm
 ; 
 ; MCU: 68HC16
 ; 

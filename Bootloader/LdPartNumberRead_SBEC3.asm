@@ -1,4 +1,4 @@
-; 02_LdPartNumberRead.asm
+; LdPartNumberRead_SBEC3.asm
 ; 
 ; MCU: 68HC16
 ; 

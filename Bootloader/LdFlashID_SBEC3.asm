@@ -1,4 +1,4 @@
-; 11_LdFlashID.asm
+; LdFlashID_SBEC3.asm
 ; 
 ; MCU: 68HC16
 ; 
