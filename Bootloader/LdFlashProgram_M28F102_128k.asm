@@ -25,7 +25,7 @@
 ; 30:          request handshake with flash block upload
 ; AA:          flash bank (0 or 1)
 ; BB CC:       flash offset
-; XX YY:       flash block size (must be a power of 2)
+; XX YY:       flash block size (must be a power of 2 and not greater than 128 bytes)
 ; KK LL MM NN: flash block bytes read from flash memory chip after writing them
 ; 31:          request accepted
 ; 01:          write error
@@ -39,7 +39,7 @@
 ; 40:          request handshake without flash block upload (use previously saved flash block)
 ; AA:          flash bank (0 or 1)
 ; BB CC:       flash offset
-; XX YY:       flash block size (must be a power of 2)
+; XX YY:       flash block size (must be a power of 2 and not greater than 128 bytes)
 ; KK LL MM NN: flash block bytes read from flash memory chip after writing them
 ; 31:          request accepted
 ; 01:          write error
@@ -51,6 +51,8 @@
 ; 
 ; 32: stop programming request
 ; 22: request accepted, function finished running
+; 
+; Notes
 
 .include "68hc16def.inc"
 
@@ -197,6 +199,8 @@ SendHandshake:
 	ldd	BlockSize		; D = flash block size
 	cpd	#0			; compare D to value
 	beq	InvalidBlockSize	; branch if equal
+	cpd	#$80			; compare D to value
+	bhi	InvalidBlockSize	; branch if higher
 	ldx	FlashOffset		; X = flash offset start
 	ldab	CommandByte		; B = command byte
 	andp	#$FEFF			; clear carry bit in CCR register
