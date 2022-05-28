@@ -20,6 +20,7 @@
 ; Request handshake with flash block upload:
 ; TX: 30 AA BB CC XX YY KK LL MM NN...
 ; RX: 31 AA BB CC XX YY KK LL MM NN...
+; RX: 01/80
 ; 
 ; 30:          request handshake with flash block upload
 ; AA:          flash bank (0 or 1)
@@ -27,10 +28,13 @@
 ; XX YY:       flash block size (must be a power of 2)
 ; KK LL MM NN: flash block bytes read from flash memory chip after writing them
 ; 31:          request accepted
+; 01:          write error
+; 80:          invalid block size
 ; 
 ; Request handshake without flash block upload (use previously saved flash block):
 ; TX: 40 AA BB CC XX YY
 ; RX: 31 AA BB CC XX YY KK LL MM NN...
+; RX: 01/80
 ; 
 ; 40:          request handshake without flash block upload (use previously saved flash block)
 ; AA:          flash bank (0 or 1)
@@ -38,6 +42,8 @@
 ; XX YY:       flash block size (must be a power of 2)
 ; KK LL MM NN: flash block bytes read from flash memory chip after writing them
 ; 31:          request accepted
+; 01:          write error
+; 80:          invalid block size
 ; 
 ; Stop programming:
 ; TX: 32
