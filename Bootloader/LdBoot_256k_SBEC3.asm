@@ -1,5 +1,8 @@
 ; LdBoot_256k_SBEC3.asm
 ; 
+; SBEC3Library (https://github.com/laszlodaniel/SBEC3Library)
+; Copyright (C) unknown
+; 
 ; MCU: 68HC16
 ; 
 ; Bootloader for an SBEC3 PCM that has been placed 

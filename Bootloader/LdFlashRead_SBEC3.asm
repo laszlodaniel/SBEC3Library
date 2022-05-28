@@ -1,5 +1,8 @@
 ; LdFlashRead_SBEC3.asm
 ; 
+; SBEC3Library (https://github.com/laszlodaniel/SBEC3Library)
+; Copyright (C) 2022, Daniel Laszlo
+; 
 ; MCU: 68HC16
 ; 
 ; Worker function to read SBEC3 PCM's flash memory.
@@ -25,7 +28,10 @@
 LdFlashRead:
 
 	jsr	SCI_RX			; read flash bank offset
+	tba				; A = B, save original flash bank value
+	addb	#4			; B = B + 4, flash memory base offset is $40000 set by bootloader
 	tbxk				; transfer lower 4 bits of B to XK (flash bank)
+	tab				; B = A, restore saved value
 	jsr	SCI_TX			; echo
 	jsr	SCI_RX			; read flash offset HB
 	stab	DataHB			; save flash offset HB
@@ -46,7 +52,7 @@ LdFlashRead:
 	jsr	SCI_TX			; echo
 	ldd	DataHB			; load D with byte count
 	cpd	#0			; compare D to zero
-	lbeq	LdFlashRead		; can't read zero bytes, try again
+	beq	LdFlashRead		; can't read zero bytes, try again
 	clrd				; clear D
 
 ReadNextByte:

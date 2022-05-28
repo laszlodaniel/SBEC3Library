@@ -1,5 +1,8 @@
 ; LdFlashID_SBEC3.asm
 ; 
+; SBEC3Library (https://github.com/laszlodaniel/SBEC3Library)
+; Copyright (C) 2022, Daniel Laszlo
+; 
 ; MCU: 68HC16
 ; 
 ; Worker function to read manufacturer and chip ID 
