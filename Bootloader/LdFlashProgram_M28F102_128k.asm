@@ -105,8 +105,8 @@ SkipWrite:
 	ldd	E, X			; D = flash word at X + E
 	jsr	EchoFlashWord		; jump to subroutine
 	adde	#2			; E = E + 2, next flash word in RAM
-	cpe	BlockSize		; check if E equals block size
-	blt	WriteLoop		; branch if there's words left to write
+	cpe	BlockSize		; check if E equals to block size
+	blt	WriteLoop		; branch if there are words left to write
 	bra	CommandLoop		; branch always to read another command
 
 Error:
