@@ -96,8 +96,14 @@ WriteFlash:
 	std	E, X			; set command
 	ldd	#10			; set 6 us delay
 	jsr	Delay			; wait here for a while
+	bra	Verify			; branch always
 
 SkipWrite:
+
+	ldd	#0			; $00 = read memory
+	std	E, X			; set command
+
+Verify:
 
 	ldd	E, X			; D = flash word at X + E
 	subd	E, Y			; subtract flash word to write
