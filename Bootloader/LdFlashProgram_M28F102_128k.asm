@@ -198,9 +198,9 @@ SendHandshake:
 	jsr	SCI_TX			; echo
 	ldd	BlockSize		; D = flash block size
 	cpd	#0			; compare D to value
-	beq	InvalidBlockSize	; branch if equal
-	cpd	#$80			; compare D to value
-	bhi	InvalidBlockSize	; branch if higher
+	beq	InvalidBlockSize	; branch if equal to zero
+	cpd	#$100			; compare D to value
+	bhi	InvalidBlockSize	; branch if higher than 256 bytes
 	ldx	FlashOffset		; X = flash offset start
 	ldab	CommandByte		; B = command byte
 	andp	#$FEFF			; clear carry bit in CCR register
