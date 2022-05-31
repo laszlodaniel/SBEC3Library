@@ -52,7 +52,7 @@ LdFlashRead:
 	jsr	SCI_TX			; echo
 	ldd	DataHB			; load D with byte count
 	cpd	#0			; compare D to zero
-	beq	LdFlashRead		; can't read zero bytes, try again
+	beq	Break			; can't read zero bytes, exit
 	clrd				; clear D
 
 ReadNextByte:
@@ -62,6 +62,9 @@ ReadNextByte:
 	aix	#1			; increment IX value
 	decw	DataHB			; decrement byte count value
 	bne	ReadNextByte		; branch if length is not zero
+
+Break:
+
 	rts				; return from subroutine
 
 SCI_TX:
