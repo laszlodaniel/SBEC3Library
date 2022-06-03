@@ -25,7 +25,7 @@
 ; 30:          request handshake with flash block upload
 ; AA:          flash bank (0 or 1)
 ; BB CC:       flash offset
-; XX YY:       flash block size (must be a power of 2 and not greater than 128 bytes)
+; XX YY:       flash block size (must be a power of 2 and not greater than 256 bytes)
 ; KK LL MM NN: flash block bytes read from flash memory chip after writing them
 ; 31:          request accepted
 ; 01:          write error
@@ -39,7 +39,7 @@
 ; 40:          request handshake without flash block upload (use previously saved flash block)
 ; AA:          flash bank (0 or 1)
 ; BB CC:       flash offset
-; XX YY:       flash block size (must be a power of 2 and not greater than 128 bytes)
+; XX YY:       flash block size (must be a power of 2 and not greater than 256 bytes)
 ; KK LL MM NN: flash block bytes read from flash memory chip after writing them
 ; 31:          request accepted
 ; 01:          write error
