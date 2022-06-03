@@ -51,8 +51,6 @@
 ; 
 ; 32: stop programming request
 ; 22: request accepted, function finished running
-; 
-; Notes
 
 .include "68hc16def.inc"
 
@@ -67,7 +65,7 @@ LdFlashProgram_M28F102:
 CommandLoop:
 
 	jsr	ReadCMD			; jump to subroutine
-	bcs	Return			; branch to exit if carry bit is set in CCR
+	bcs	Exit			; branch to exit if carry bit is set in CCR
 
 WriteLoop:
 
@@ -120,7 +118,7 @@ Error:
 	ldab	#1			; B = 1, flash memory write error
 	jsr	SCI_TX			; echo
 
-Return:
+Exit:
 
 	ldab	#4			; B = 4
 	tbxk				; XK = B = 4
@@ -132,12 +130,12 @@ Return:
 ReadCMD:
 
 	jsr	GetCMD			; jump to subroutine
-	bcc	Success			; branch if carry bit is clear (set when error occurs)
+	bcc	ValidCMD		; branch if carry bit is clear
 	lde	#$AA55			; E = value
 	orp	#$100			; set carry bit in CCR register
 	bra	ReturnCMD		; branch to exit if error occurred
 
-Success:
+ValidCMD:
 
 	clre				; E = 0
 	cmpb	#$40			; $40 = skip saving next flash block and use the previously saved one (useful for FFFF only block)

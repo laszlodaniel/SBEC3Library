@@ -12,13 +12,13 @@
 ; 
 ; TX: 20
 ; RX: 21
-; RX: 22/80/81
+; RX: 22/81/82
 ; 
 ; 20: start worker function request
 ; 21: request accepted
 ; 22: erase success
-; 80: erase error while flipping bits from 1 to 0
-; 81: erase error while flipping bits from 0 to 1
+; 81: erase error while flipping bits from 1 to 0
+; 82: erase error while flipping bits from 0 to 1
 ; 
 ; Notes:
 ; The first step of erasing this type of flash memory chip is 
@@ -126,12 +126,12 @@ Return:
 
 Error_P:
 
-	ldab	#$80			; erase error
+	ldab	#$81			; erase error
 	bra	Return			; branch always
 
 Error_E:
 
-	ldab	#$81			; erase error
+	ldab	#$82			; erase error
 	bra	Return			; branch always
 
 SCI_TX:

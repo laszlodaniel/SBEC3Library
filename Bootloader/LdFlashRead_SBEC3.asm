@@ -7,19 +7,34 @@
 ; 
 ; Worker function to read SBEC3 PCM's flash memory.
 ; 
-; Command:
+; Commands:
 ; 
-; TX: 20 AA BB CC DD EE
-; RX: 21 AA BB CC DD EE XX YY ZZ...
+; Start worker function:
+; TX: 20
+; RX: 21
 ; 
-; 20:       start worker function request
+; 20: start worker function request
+; 21: request accepted
+; 
+; Request handshake with flash block read:
+; 
+; TX: 30 AA BB CC DD EE
+; RX: 31 AA BB CC DD EE XX YY ZZ...
+; RX: 80
+; 
+; 30:       request handshake with flash block read
 ; AA BB CC: flash memory offset
-; DD EE:    number of bytes to read
-; 21:       request accepted
+; DD EE:    block size to read
+; 31:       request accepted
 ; XX YY ZZ: flash memory values
+; 80:       invalid block size
 ; 
-; Notes:
-; Wait for echo before transmitting the next byte.
+; Stop memory reading:
+; TX: 32
+; RX: 22
+; 
+; 32: stop memory reading request
+; 22: request accepted, function finished running
 
 .include "68hc16def.inc"
 
@@ -27,6 +42,59 @@
 
 LdFlashRead:
 
+	ldab	#4			; B = 4
+	tbxk				; XK = B = 4
+	ldx	#0			; XK:IX = $40000
+	ldd	#0			; $00 = read memory
+	std	0, X			; set command
+	
+CommandLoop:
+
+	jsr	ReadCMD			; jump to subroutine
+	bcs	Exit			; branch to exit if carry bit is set in CCR
+
+ReadLoop:
+
+	ldab	0, X			; load B with flash memory value at IX
+	jsr	SCI_TX			; write SCI-byte from B
+	aix	#1			; increment IX value
+	decw	DataHB			; decrement byte count value
+	bne	ReadLoop		; branch if length is not zero
+	bra	CommandLoop		; branch always to read another command
+
+Exit:
+
+	rts				; return from subroutine
+
+ReadCMD:
+
+	jsr	GetCMD			; jump to subroutine
+	bcc	ValidCMD		; branch if carry bit is clear
+	orp	#$100			; set carry bit in CCR register
+
+ValidCMD:
+
+	rts				; return from subroutine
+
+GetCMD:
+
+	jsr	SCI_RX			; read SCI byte to B
+	cmpb	#$30			; $30 = request handshake with flash block read
+	beq	SendHandshake		; branch if equal
+	cmpb	#$32			; $32 = stop reading
+	beq	StopReading		; branch if equal
+	comb				; 1's complement B (flip bits) to indicate unknown command byte
+	bra	Response		; branch always
+
+StopReading:
+
+	ldab	#$22			; $22 = reading finished successfully
+	bra	Response		; branch always
+
+SendHandshake:
+
+	ldab	#$31			; $31 = handshake from prgramming device
+	jsr	SCI_TX			; echo
 	jsr	SCI_RX			; read flash bank offset
 	tba				; A = B, save original flash bank value
 	addb	#4			; B = B + 4, flash memory base offset is $40000 set by bootloader
@@ -35,35 +103,34 @@ LdFlashRead:
 	jsr	SCI_TX			; echo
 	jsr	SCI_RX			; read flash offset HB
 	stab	DataHB			; save flash offset HB
-	ldab	DataHB			; load flash offset HB from memory
 	jsr	SCI_TX			; echo
 	jsr	SCI_RX			; read flash offset LB
 	stab	DataLB			; save flash offset LB
 	ldx	DataHB			; IX = flash offset
-	ldab	DataLB			; load flash offset LB from memory
 	jsr	SCI_TX			; echo
 	jsr	SCI_RX			; read byte count HB
 	stab	DataHB			; save byte count HB
-	ldab	DataHB			; load byte count HB from memory
 	jsr	SCI_TX			; echo
 	jsr	SCI_RX			; read byte count LB
 	stab	DataLB			; save byte count lB
-	ldab	DataLB			; load byte count LB from memory
 	jsr	SCI_TX			; echo
 	ldd	DataHB			; load D with byte count
 	cpd	#0			; compare D to zero
-	beq	Break			; can't read zero bytes, exit
-	clrd				; clear D
+	beq	InvalidBlockSize	; branch if equal
+	andp	#$FEFF			; clear carry bit in CCR register
+	clrd				; D = 0
+	bra	CommandFinish		; branch to exit
 
-ReadNextByte:
+InvalidBlockSize:
 
-	ldab	0, X			; load B with flash memory value at IX
-	jsr	SCI_TX			; write SCI-byte from B
-	aix	#1			; increment IX value
-	decw	DataHB			; decrement byte count value
-	bne	ReadNextByte		; branch if length is not zero
+	ldab	#$80			; $80 = block size error
 
-Break:
+Response:
+
+	jsr	SCI_TX			; echo
+	orp	#$100			; set carry bit in CCR register
+
+CommandFinish:
 
 	rts				; return from subroutine
 
@@ -84,5 +151,11 @@ SCI_RX:
 	ldab	SCDR_LB, Z		; load B with SCI Data Register content
 	rts				; return from subroutine
 
-DataHB: fcb $27
-DataLB: fcb $4C
+Delay:
+
+	subd	#1			; decrement D
+	bne	Delay			; branch/loop until D equals zero, 1 loop takes 0.000625 ms or 0.625 us to complete
+	rts				; return from subroutine
+
+DataHB:		fcb $27
+DataLB:		fcb $4C
