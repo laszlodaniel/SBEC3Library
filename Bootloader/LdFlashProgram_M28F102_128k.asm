@@ -25,7 +25,7 @@
 ; 30:          request handshake with flash block upload
 ; AA:          flash bank (0 or 1)
 ; BB CC:       flash offset
-; XX YY:       flash block size (must be a power of 2 and not greater than 256 bytes)
+; XX YY:       flash block size (must be a power of 2)
 ; KK LL MM NN: flash block bytes read from flash memory chip after writing them
 ; 31:          request accepted
 ; 01:          write error
@@ -39,7 +39,7 @@
 ; 40:          request handshake without flash block upload (use previously saved flash block)
 ; AA:          flash bank (0 or 1)
 ; BB CC:       flash offset
-; XX YY:       flash block size (must be a power of 2 and not greater than 256 bytes)
+; XX YY:       flash block size (must be a power of 2)
 ; KK LL MM NN: flash block bytes read from flash memory chip after writing them
 ; 31:          request accepted
 ; 01:          write error
@@ -51,6 +51,12 @@
 ; 
 ; 32: stop programming request
 ; 22: request accepted, function finished running
+; 
+; Notes:
+; Maximum block size depends on available RAM in the MCU.
+; Older variants have 2kB RAM only which limits block size up to 256 bytes.
+; Later variants have 4kB RAM wich allows block size up to 2048 bytes.
+; In any case, RAM range is checked before flash block upload.
 
 .include "68hc16def.inc"
 
@@ -202,9 +208,9 @@ SendHandshake:
 	jsr	SCI_TX			; echo
 	ldd	BlockSize		; D = flash block size
 	cpd	#0			; compare D to value
-	beq	InvalidBlockSize	; branch if equal to zero
-	cpd	#$100			; compare D to value
-	bhi	InvalidBlockSize	; branch if higher than 256 bytes
+	beq	InvalidBlockSize	; branch if block size is zero
+	jsr	CheckRAMRange		; jump to subroutine
+	bcs	InvalidBlockSize	; branch if block does not fit into RAM
 	ldx	FlashOffset		; X = flash offset start
 	ldab	CommandByte		; B = command byte
 	andp	#$FEFF			; clear carry bit in CCR register
@@ -253,6 +259,32 @@ EchoFlashWord:
 	jsr	SCI_TX			; echo HB
 	ldab	DataLB			; load saved value from RAM
 	jsr	SCI_TX			; echo LB
+	rts				; return from subroutine
+
+CheckRAMRange:
+
+	pshm	D			; push D onto stack (save value)
+	addd	#$680			; add value to D (base RAM address for flash block)
+	cmpa	#7			; compare A to value (2kB RAM)
+	bls	RangeOK			; branch if lower or same
+	ldab	SIMTR, Z		; B = SIMTR register content
+	cmpb	#$83			; compare B to magic value
+	beq	RangeError		; branch if equal
+	cmpa	#$F			; compare A to value (4kB RAM)
+	bls	RangeOK			; branch if lower or same
+
+RangeError:
+
+	orp	#$100			; set carry bit in CCR register
+	bra	Break			; branch to exit
+
+RangeOK:
+
+	andp	#$FEFF			; clear carry bit in CCR register
+
+Break:
+
+	pulm	D			; pull D from stack (restore value)
 	rts				; return from subroutine
 
 PulseCount:	fcb $27

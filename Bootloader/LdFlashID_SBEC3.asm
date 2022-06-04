@@ -23,10 +23,13 @@
 ; Manufacturer:
 ; $20: STMicroelectronics
 ; $31: CATALYST
+; $89: Intel
 ; 
 ; Chip ID:
 ; $50: M28F102 (128k)
 ; $51: CAT28F102 (128k)
+; $B4: N28F010 (128k)
+; $BD: N28F020 (256k)
 ; $E0: M28F210 (256k)
 ; $E6: M28F220 (256k)
 ; 
