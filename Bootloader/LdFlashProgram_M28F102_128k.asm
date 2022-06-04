@@ -54,7 +54,7 @@
 ; 
 ; Notes:
 ; Maximum block size depends on available RAM in the MCU.
-; Older variants have 2kB RAM only which limits block size up to 256 bytes.
+; Older variants have 2kB RAM only which limits block size up to 512 bytes.
 ; Later variants have 4kB RAM wich allows block size up to 2048 bytes.
 ; In any case, RAM range is checked before flash block upload.
 
@@ -66,7 +66,7 @@ LdFlashProgram_M28F102:
 
 	ldab	#0			; B = 0
 	tbyk				; YK = B = 0
-	ldy	#$680			; YK:IY = $00680, offset in RAM to save flash block
+	ldy	#$500			; YK:IY = $00500, offset in RAM to save flash block
 
 CommandLoop:
 
@@ -264,7 +264,7 @@ EchoFlashWord:
 CheckRAMRange:
 
 	pshm	D			; push D onto stack (save value)
-	addd	#$680			; add value to D (base RAM address for flash block)
+	addd	#$500			; add value to D (base RAM address for flash block)
 	cmpa	#7			; compare A to value (2kB RAM)
 	bls	RangeOK			; branch if lower or same
 	ldab	SIMTR, Z		; B = SIMTR register content
