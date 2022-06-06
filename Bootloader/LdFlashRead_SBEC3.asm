@@ -18,22 +18,22 @@
 ; 
 ; Request handshake with flash block read:
 ; 
-; TX: 30 AA BB CC DD EE
-; RX: 31 AA BB CC DD EE XX YY ZZ...
+; TX: 33 AA BB CC DD EE
+; RX: 34 AA BB CC DD EE XX YY ZZ...
 ; RX: 80
 ; 
-; 30:       request handshake with flash block read
+; 33:       request handshake with flash block read
 ; AA BB CC: flash memory offset
 ; DD EE:    block size to read
-; 31:       request accepted
+; 34:       request accepted
 ; XX YY ZZ: flash memory values
 ; 80:       invalid block size
 ; 
 ; Stop memory reading:
-; TX: 32
+; TX: 35
 ; RX: 22
 ; 
-; 32: stop memory reading request
+; 35: stop memory reading request
 ; 22: request accepted, function finished running
 
 .include "68hc16def.inc"
@@ -79,9 +79,9 @@ ValidCMD:
 GetCMD:
 
 	jsr	SCI_RX			; read SCI byte to B
-	cmpb	#$30			; $30 = request handshake with flash block read
+	cmpb	#$33			; $33 = request handshake with flash block read
 	beq	SendHandshake		; branch if equal
-	cmpb	#$32			; $32 = stop reading
+	cmpb	#$35			; $35 = stop reading
 	beq	StopReading		; branch if equal
 	comb				; 1's complement B (flip bits) to indicate unknown command byte
 	bra	Response		; branch always
@@ -93,7 +93,7 @@ StopReading:
 
 SendHandshake:
 
-	ldab	#$31			; $31 = handshake from prgramming device
+	ldab	#$34			; $34 = handshake from programming device
 	jsr	SCI_TX			; echo
 	jsr	SCI_RX			; read flash bank offset
 	tba				; A = B, save original flash bank value

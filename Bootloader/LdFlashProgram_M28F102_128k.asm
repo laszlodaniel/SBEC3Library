@@ -185,7 +185,7 @@ StopProgramming:
 
 SendHandshake:
 
-	ldab	#$31			; $31 = handshake from prgramming device
+	ldab	#$31			; $31 = handshake from programming device
 	jsr	SCI_TX			; echo
 	jsr	SCI_RX			; read flash bank to B
 	andb	#1			; keep lowest bit, restrict bank values to 0 and 1 (128k memory)
