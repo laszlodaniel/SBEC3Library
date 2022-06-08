@@ -62,7 +62,7 @@
 
 	org	$200			; start offset in RAM
 
-LdFlashProgram_M28F102:
+LdFlashWrite_M28F102:
 
 	ldab	#0			; B = 0
 	tbyk				; YK = B = 0
