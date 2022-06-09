@@ -34,7 +34,7 @@ LdFlashErase_M28F102:
 	ldab	#4			; B = 4
 	tbxk				; XK = B = 4
 	ldx	#0			; XK:IX = $40000
-	ldd	#$3E80			; set 10 ms delay
+	ldd	#$0FA0			; set 2.5 ms delay
 	jsr	Delay			; wait here for programming voltage
 
 Loop_P:
