@@ -112,7 +112,7 @@ SendHandshake:
 	stab	DataHB			; save byte count HB
 	jsr	SCI_TX			; echo
 	jsr	SCI_RX			; read byte count LB
-	stab	DataLB			; save byte count lB
+	stab	DataLB			; save byte count LB
 	jsr	SCI_TX			; echo
 	ldd	DataHB			; load D with byte count
 	cpd	#0			; compare D to zero

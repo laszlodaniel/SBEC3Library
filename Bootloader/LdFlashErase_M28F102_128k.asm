@@ -64,13 +64,9 @@ Try_P:
 	ldd	0, X			; D = flash word at X
 	bne	Retry_P			; branch if not zero to try again
 	aix	#2			; X = X + 2, next flash word
-	cpx	#0			; check overflow in X
-	bne	Loop_P			; branch if X did not overflow
 	txkb				; B = XK
-	incb				; increment B
-	tbxk				; XK = B = Bank
 	cmpb	#6			; compare Bank to value, valid banks are 4 and 5 (128k)
-	bne	Loop_P			; branch if Bank is valid
+	bcs	Loop_P			; branch if lower
 	ldab	#4			; B = 4
 	tbxk				; XK = B = 4
 	ldx	#0			; XK:IX = $40000
@@ -105,16 +101,14 @@ Loop_E:
 	cpd	#$FFFF			; compare word to $FFFF
 	bne	Retry_E			; branch if not $FFFF to try again
 	aix	#2			; X = X + 2, next flash word
-	cpx	#0			; check overflow in X
-	bne	Loop_E			; branch if X did not overflow
 	txkb				; B = XK
-	incb				; increment B
-	tbxk				; XK = B = Bank
 	cmpb	#6			; compare Bank to value, valid banks are 4 and 5 (128k)
-	bne	Loop_E			; branch if Bank is valid
+	bcs	Loop_E			; branch if lower
 	ldab	#4			; B = 4
 	tbxk				; XK = B = 4
 	ldx	#0			; XK:IX = $40000
+	ldd	#0			; $00 = read memory
+	std	0, X			; set command
 	ldab	#$22			; erase success
 
 Return:
