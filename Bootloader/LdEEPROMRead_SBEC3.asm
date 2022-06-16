@@ -20,7 +20,7 @@
 ; 
 ; TX: 36 AA BB CC DD
 ; RX: 37 AA BB CC DD XX YY...
-; RX: 80/83
+; RX: 80/84
 ; 
 ; 36:    request handshake with EEPROM block read
 ; AA BB: EEPROM offset
@@ -28,7 +28,7 @@
 ; 37:    request accepted
 ; XX YY: EEPROM values
 ; 80:    invalid block size
-; 83:    offset out of range
+; 84:    offset out of range
 ; 
 ; Stop memory reading:
 ; TX: 38
@@ -132,7 +132,7 @@ InvalidBlockSize:
 
 InvalidOffset:
 
-	ldab	#$83			; $83 = offset out of range
+	ldab	#$84			; $84 = offset out of range
 
 Response:
 
