@@ -45,7 +45,7 @@ LdFlashID:
 	ldab	#4			; B = 4
 	tbxk				; XK = B = 4
 	ldx	#0			; XK:IX = $40000
-	ldd	#$0FA0			; set 2.5 ms delay
+	ldd	#$FA0			; set 2.5 ms delay
 	jsr	Delay			; wait here for programming voltage
 	ldd	#$90			; $90 = read electronic signature command
 	std	0, X			; set command
