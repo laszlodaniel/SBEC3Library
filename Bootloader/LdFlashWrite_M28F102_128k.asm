@@ -1,12 +1,12 @@
-; LdFlashProgram_M28F102_128k.asm
+; LdFlashWrite_M28F102_128k.asm
 ; 
 ; SBEC3Library (https://github.com/laszlodaniel/SBEC3Library)
 ; Copyright (C) 2022, Daniel Laszlo
 ; 
 ; MCU: 68HC16
 ; 
-; Worker function to program the M28F102 128k flash memory chip 
-; found in some earlier SBEC3 units. 
+; Worker function to write data to the M28F102 128k flash memory 
+; chip found in some earlier SBEC3 units. 
 ; 
 ; Commands:
 ; 
@@ -154,7 +154,7 @@ SaveBlock:
 	adde	#1			; E = E + 1, next empty offset in RAM
 	cpe	BlockSize		; compare E with block size
 	bcs	SaveBlock		; branch if lower (carry bit set) save another byte
-	ldd	#$0FA0			; set 2.5 ms delay
+	ldd	#$FA0			; set 2.5 ms delay
 	jsr	Delay			; wait here for programming voltage
 
 SkipBlock:
@@ -188,7 +188,6 @@ SendHandshake:
 	ldab	#$31			; $31 = handshake from programming device
 	jsr	SCI_TX			; echo
 	jsr	SCI_RX			; read flash bank to B
-	andb	#1			; keep lowest bit, restrict bank values to 0 and 1 (128k memory)
 	tba				; A = B, save original flash bank value
 	addb	#4			; B = B + 4, flash memory base offset is $40000 set by bootloader
 	tbxk				; XK = B
