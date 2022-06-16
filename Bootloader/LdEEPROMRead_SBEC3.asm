@@ -62,7 +62,7 @@ ReadLoop:
 	tab				; B = A
 	jsr	SCI_TX			; write SCI-byte from B
 	adde	#1			; increment offset in E
-	decw	CountHB			; decrement byte count value
+	decw	BlockSize		; decrement block size
 	bne	ReadLoop		; branch if length is not zero
 	bra	CommandLoop		; branch always to read another command
 
@@ -100,29 +100,29 @@ SendHandshake:
 	ldab	#$37			; $37 = handshake from programming device
 	jsr	SCI_TX			; echo
 	jsr	SCI_RX			; read EEPROM offset HB
-	stab	OffsetHB		; save EEPROM offset HB
+	stab	EEPROMOffset		; save EEPROM offset HB
 	jsr	SCI_TX			; echo
 	jsr	SCI_RX			; read EEPROM offset LB
-	stab	OffsetLB		; save EEPROM offset LB
+	stab	EEPROMOffset+1		; save EEPROM offset LB
 	jsr	SCI_TX			; echo
 	jsr	SCI_RX			; read byte count HB
-	stab	CountHB			; save byte count HB
+	stab	BlockSize		; save byte count HB
 	jsr	SCI_TX			; echo
 	jsr	SCI_RX			; read byte count LB
-	stab	CountLB			; save byte count LB
+	stab	BlockSize+1		; save byte count LB
 	jsr	SCI_TX			; echo
-	ldd	OffsetHB		; D = EEPROM offset
+	ldd	EEPROMOffset		; D = EEPROM offset
 	cpd	#$200			; compare D to value
 	bcc	InvalidOffset		; branch if greater or equal
-	addd	CountHB			; add byte count to D
+	addd	BlockSize		; add byte count to D
 	cpd	#$200			; compare D to value
 	bhi	InvalidBlockSize	; branch if higher
-	ldd	CountHB			; D = block size
+	ldd	BlockSize		; D = block size
 	cpd	#0			; compare D to value
 	beq	InvalidBlockSize	; branch if zero is given as block size
 	andp	#$FEFF			; clear carry bit in CCR register
 	clrd				; D = 0
-	lde	OffsetHB		; E = start offset
+	lde	EEPROMOffset		; E = start offset
 	bra	CommandFinish		; branch to exit
 
 InvalidBlockSize:
@@ -159,10 +159,6 @@ ReadByte:
 	bcs	Return			; branch if carry bit is set in CCR register
 	ldd	RR+4, Z			; D = value from Receive RAM
 	tsta				; test A for zero or minus
-	bra	Return			; branch always to exit
-	orp	#$100			; set carry bit in CCR register
-	tpa				; A = CCR MSB
-	ldab	#$5A			; B = value
 
 Return:
 
@@ -217,7 +213,7 @@ Delay:
 	bne	Delay			; branch/loop until D equals zero, 1 loop takes 0.000625 ms or 0.625 us to complete
 	rts				; return from subroutine
 
-OffsetHB:	fcb $27
-OffsetLB:	fcb $4C
-CountHB:	fcb $27
-CountLB:	fcb $4C
+BlockSize:	fcb $27
+BlockSizeLB:	fcb $4C
+EEPROMOffset:	fcb $27
+EEPROMOffsetLB:	fcb $4C
