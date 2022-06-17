@@ -302,7 +302,7 @@ BlockSize:	fcb $27
 BlockSizeLB:	fcb $4C
 EEPROMOffset:	fcb $27
 EEPROMOffsetLB:	fcb $4C
-QSPITimeout	fcb $27
-QSPITimeoutLB	fcb $4C
+QSPITimeout:	fcb $27
+QSPITimeoutLB:	fcb $4C
 Attempts:	fcb $27
 DataLB:		fcb $4C
