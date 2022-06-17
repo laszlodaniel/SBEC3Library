@@ -73,9 +73,9 @@ WriteLoop:
 	tab				; B = A
 	jsr	SCI_TX			; write SCI-byte from B
 	adde	#1			; increment offset in E
+	clr	Attempts		; clear number of attempts
 	incw	EEPROMOffset		; increment EEPROM offset
 	decw	BlockSize		; decrement block size
-	clr	Attempts		; clear number of attempts
 	bne	WriteLoop		; branch if length is not zero
 	bra	CommandLoop		; branch always to read another command
 
