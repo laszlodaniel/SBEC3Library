@@ -152,7 +152,7 @@ ReadByte:
 	oraa	#3			; append EEPROM read command
 	std	TR+$10, Z		; store D to Transmit RAM
 	ldd	#$908			; D = value
-	std	SPCR2, Z		; store D to QSPI register
+	std	SPCR2, Z		; store D to SPCR2
 	jsr	QSPI_WaitTransfer	; jump to subroutine
 	bcs	Return			; branch if carry bit is set in CCR register
 	ldd	RR+$12, Z		; D = value from Receive RAM
