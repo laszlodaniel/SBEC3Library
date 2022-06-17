@@ -150,14 +150,12 @@ ReadByte:
 	asla				; arithmetic shift left A
 	asla				; arithmetic shift left A
 	oraa	#3			; append EEPROM read command
-	std	TR+2, Z			; store D to Transmit RAM
-	ldd	#$CB4B			; D = value
-	std	CR+1, Z			; store D to Command RAM
-	ldd	#$201			; D = value
+	std	TR+$10, Z		; store D to Transmit RAM
+	ldd	#$908			; D = value
 	std	SPCR2, Z		; store D to QSPI register
 	jsr	QSPI_WaitTransfer	; jump to subroutine
 	bcs	Return			; branch if carry bit is set in CCR register
-	ldd	RR+4, Z			; D = value from Receive RAM
+	ldd	RR+$12, Z		; D = value from Receive RAM
 	tsta				; test A for zero or minus
 
 Return:
