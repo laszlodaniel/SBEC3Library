@@ -16,13 +16,13 @@
 ; 20: start worker function request
 ; 21: request accepted
 ; 
-; Request handshake with EEPROM block read:
+; Request handshake with EEPROM block write:
 ; 
 ; TX: 39 AA BB CC DD XX YY...
 ; RX: 3A AA BB CC DD XX YY...
 ; RX: 01/80/84
 ; 
-; 39:    request handshake with EEPROM block read
+; 39:    request handshake with EEPROM block write
 ; AA BB: EEPROM offset
 ; CC DD: block size to write
 ; XX YY: block bytes read from EEPROM after writing them
