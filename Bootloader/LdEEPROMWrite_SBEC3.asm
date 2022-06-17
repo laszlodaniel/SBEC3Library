@@ -75,6 +75,7 @@ WriteLoop:
 	adde	#1			; increment offset in E
 	incw	EEPROMOffset		; increment EEPROM offset
 	decw	BlockSize		; decrement block size
+	clr	Attempts		; clear number of attempts
 	bne	WriteLoop		; branch if length is not zero
 	bra	CommandLoop		; branch always to read another command
 
