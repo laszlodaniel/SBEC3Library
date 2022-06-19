@@ -41,7 +41,7 @@
 ; Notes:
 ; EEPROM size is generally 512 bytes (00 00 - 01 FF).
 ; Offset and block size do not have to be a power of 2.
-; User can easily write the whole EEPROM in one go (TX: 39 00 00 02 00 XX YY ZZ...).
+; User can easily write the whole EEPROM in one go (TX: 36 00 00 02 00 XX YY ZZ...).
 
 .include "68hc16def.inc"
 
