@@ -18,24 +18,24 @@
 ; 
 ; Request handshake with EEPROM block write:
 ; 
-; TX: 39 AA BB CC DD XX YY...
-; RX: 3A AA BB CC DD XX YY...
+; TX: 36 AA BB CC DD XX YY...
+; RX: 37 AA BB CC DD XX YY...
 ; RX: 01/80/84
 ; 
-; 39:    request handshake with EEPROM block write
+; 36:    request handshake with EEPROM block write
 ; AA BB: EEPROM offset
 ; CC DD: block size to write
 ; XX YY: block bytes read from EEPROM after writing them
-; 3A:    request accepted
+; 37:    request accepted
 ; 01:    write error
 ; 80:    invalid block size
 ; 84:    offset out of range
 ; 
 ; Stop EEPROM writing:
-; TX: 3B
+; TX: 38
 ; RX: 22
 ; 
-; 3B: stop EEPROM writing request
+; 38: stop EEPROM writing request
 ; 22: request accepted, function finished running
 ; 
 ; Notes:
@@ -116,9 +116,9 @@ ReturnCMD:
 GetCMD:
 
 	jsr	SCI_RX			; read SCI byte to B
-	cmpb	#$39			; $39 = request handshake with EEPROM block write
+	cmpb	#$36			; $36 = request handshake with EEPROM block write
 	beq	SendHandshake		; branch if equal
-	cmpb	#$3B			; $3B = stop writing
+	cmpb	#$38			; $38 = stop writing
 	beq	StopWriting		; branch if equal
 	comb				; 1's complement B (flip bits) to indicate unknown command byte
 	bra	Response		; branch always
@@ -130,7 +130,7 @@ StopWriting:
 
 SendHandshake:
 
-	ldab	#$3A			; $3A = handshake from programming device
+	ldab	#$37			; $37 = handshake from programming device
 	jsr	SCI_TX			; echo
 	jsr	SCI_RX			; read EEPROM offset HB to B
 	stab	EEPROMOffset		; save EEPROM offset HB to RAM
